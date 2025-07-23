@@ -10,10 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Product Dashboard',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Inter',
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Inter'),
       home: const DashboardPage(),
       debugShowCheckedModeBanner: false,
     );
@@ -30,25 +27,35 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final PageController _bannerController = PageController();
   int _currentCategoryIndex = 0;
-  final List<String> categories = ['All', 'Accessories', 'ASUS', 'Apple', 'Dell'];
+  final List<String> categories = [
+    'All',
+    'Accessories',
+    'ASUS',
+    'Apple',
+    'Dell',
+  ];
 
   final List<Map<String, dynamic>> products = [
     {
+      'image': 'assets/images/image.jpg',
       'name': 'Mackir Pro',
       'price': 999.00,
       'rating': 3.5,
     },
     {
+      'image': 'assets/images/image.jpg',
       'name': 'Mackir 13',
       'price': 1299.00,
       'rating': 3.5,
     },
     {
+      'image': 'assets/images/image.jpg',
       'name': 'Mackir Air',
       'price': 899.00,
       'rating': 4.2,
     },
     {
+      'image': 'assets/images/image.jpg',
       'name': 'Mackir Ultra',
       'price': 1499.00,
       'rating': 4.7,
@@ -91,11 +98,11 @@ class _DashboardPageState extends State<DashboardPage> {
             // Header with greeting
             _buildHeader(),
             const SizedBox(height: 24),
-            
+
             // Banner Slider
             _buildBannerSlider(),
             const SizedBox(height: 16),
-            
+
             // Banner indicator
             Center(
               child: SmoothPageIndicator(
@@ -109,13 +116,13 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Categories section
             _buildCategoriesHeader(),
             const SizedBox(height: 12),
             _buildCategoriesList(),
             const SizedBox(height: 24),
-            
+
             // Product Grid
             GridView.builder(
               shrinkWrap: true,
@@ -127,7 +134,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 childAspectRatio: 0.75,
               ),
               itemCount: products.length,
-              itemBuilder: (context, index) => _buildProductCard(products[index]),
+              itemBuilder:
+                  (context, index) => _buildProductCard(products[index]),
             ),
           ],
         ),
@@ -146,10 +154,7 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               const Text(
                 'Hello, Jun',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {},
@@ -198,17 +203,11 @@ class _DashboardPageState extends State<DashboardPage> {
         children: [
           const Text(
             'Categories',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           TextButton(
             onPressed: () {},
-            child: const Text(
-              'See All',
-              style: TextStyle(color: Colors.blue),
-            ),
+            child: const Text('See All', style: TextStyle(color: Colors.blue)),
           ),
         ],
       ),
@@ -243,9 +242,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildProductCard(Map<String, dynamic> product) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -253,26 +250,34 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             // Product image placeholder
             Container(
-              height: 120,
+              height: 90,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.shopping_bag, size: 40, color: Colors.grey),
+              child:
+                  product.containsKey('image')
+                      ? Image.asset(
+                        product['image'],
+                        fit: BoxFit.cover,
+                        height: 90,
+                        width: double.infinity,
+                      )
+                      : const Icon(
+                        Icons.image_not_supported,
+                        size: 40,
+                        color: Colors.grey,
+                      ),
             ),
             const SizedBox(height: 12),
-            
             // Product name
             Text(
               product['name'],
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 4),
-            
+
             // Price
             Text(
               '\$${product['price'].toStringAsFixed(2)}',
@@ -282,8 +287,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 color: Colors.blue,
               ),
             ),
-            const Spacer(),
-            
+            const SizedBox(height: 4),
+
             // Add to cart and rating
             Row(
               children: [
@@ -301,23 +306,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       'Add to Cart',
                       style: TextStyle(color: Colors.white),
                     ),
-                ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.amber[100],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.star, size: 16, color: Colors.amber),
-                      const SizedBox(width: 2),
-                      Text(
-                        product['rating'].toString(),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
                   ),
                 ),
               ],
