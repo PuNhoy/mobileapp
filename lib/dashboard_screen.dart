@@ -27,6 +27,8 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final PageController _bannerController = PageController();
   int _currentCategoryIndex = 0;
+  int _selectedTabIndex = 0;
+
   final List<String> categories = [
     'All',
     'Accessories',
@@ -63,7 +65,7 @@ class _DashboardPageState extends State<DashboardPage> {
   ];
 
   final List<String> banners = [
-    'assets/banner1.jpg',
+    'assets/images/dell.jpg',
     'assets/banner2.jpg',
     'assets/banner3.jpg',
   ];
@@ -75,74 +77,117 @@ class _DashboardPageState extends State<DashboardPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0), // Add padding to the left
+          child: IconButton(
+            icon: const Icon(Icons.menu, color: Colors.black),
             onPressed: () {},
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-            onPressed: () {},
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 16.0,
+            ), // Add padding to the right
+            child: IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: Colors.black,
+              ),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with greeting
-            _buildHeader(),
-            const SizedBox(height: 24),
 
-            // Banner Slider
-            _buildBannerSlider(),
-            const SizedBox(height: 16),
+      body: _buildBodyContent(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedTabIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedTabIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
 
-            // Banner indicator
-            Center(
-              child: SmoothPageIndicator(
-                controller: _bannerController,
-                count: banners.length,
-                effect: const WormEffect(
-                  dotHeight: 8,
-                  dotWidth: 8,
-                  activeDotColor: Colors.blue,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Shop',
+          ),
 
-            // Categories section
-            _buildCategoriesHeader(),
-            const SizedBox(height: 12),
-            _buildCategoriesList(),
-            const SizedBox(height: 24),
-
-            // Product Grid
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.75,
-              ),
-              itemCount: products.length,
-              itemBuilder:
-                  (context, index) => _buildProductCard(products[index]),
-            ),
-          ],
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
 
+  Widget _buildBodyContent() {
+    switch (_selectedTabIndex) {
+      case 0:
+        return _buildHomeTab();
+      case 1:
+        return Center(child: Text('Search', style: TextStyle(fontSize: 20)));
+      case 2:
+        return Center(child: Text('Shop', style: TextStyle(fontSize: 20)));
+      case 3:
+        return Center(child: Text('Profile', style: TextStyle(fontSize: 20)));
+      default:
+        return _buildHomeTab();
+    }
+  }
+
+  Widget _buildHomeTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 24),
+          _buildBannerSlider(),
+          const SizedBox(height: 16),
+          Center(
+            child: SmoothPageIndicator(
+              controller: _bannerController,
+              count: banners.length,
+              effect: const WormEffect(
+                dotHeight: 8,
+                dotWidth: 8,
+                activeDotColor: Colors.blue,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          _buildCategoriesHeader(),
+          const SizedBox(height: 12),
+          _buildCategoriesList(),
+          const SizedBox(height: 24),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.75,
+            ),
+            itemCount: products.length,
+            itemBuilder: (context, index) => _buildProductCard(products[index]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Keep all existing helper methods (_buildHeader, _buildBannerSlider, etc.) below
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -167,7 +212,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           const CircleAvatar(
             radius: 30,
-            backgroundImage: AssetImage('assets/profile.jpg'),
+            backgroundImage: AssetImage('assets/images/profile.jpg'),
           ),
         ],
       ),
@@ -182,6 +227,7 @@ class _DashboardPageState extends State<DashboardPage> {
         itemCount: banners.length,
         itemBuilder: (context, index) {
           return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
@@ -248,7 +294,6 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product image placeholder
             Container(
               height: 90,
               decoration: BoxDecoration(
@@ -271,14 +316,11 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
             ),
             const SizedBox(height: 12),
-            // Product name
             Text(
               product['name'],
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 4),
-
-            // Price
             Text(
               '\$${product['price'].toStringAsFixed(2)}',
               style: const TextStyle(
@@ -288,8 +330,6 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
             const SizedBox(height: 4),
-
-            // Add to cart and rating
             Row(
               children: [
                 Expanded(
