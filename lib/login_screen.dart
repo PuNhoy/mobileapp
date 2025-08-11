@@ -157,10 +157,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         child: OutlinedButton(
                           onPressed: () {
-                            // String email = _emailController.text;
-                            // String password = _passwordController.text;
-                            // // ignore: avoid_print
-                            // print('Email: $email, Password: $password');
+                            String email = _emailController.text;
+                            String password = _passwordController.text;
+                            // ignore: avoid_print
+                            print('Email: $email, Password: $password');
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
